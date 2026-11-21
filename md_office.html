@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD 오피스 - 막보</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+        body { background-color: #f4f5f7; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 480px; background: #ffffff; min-height: 100vh; padding: 24px; box-shadow: 0 0 15px rgba(0,0,0,0.05); }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 12px; }
+        .page-title { font-size: 18px; font-weight: bold; color: #111; display: flex; align-items: center; gap: 8px; }
+        .page-title span.bar { display: inline-block; width: 4px; height: 16px; background-color: #ff1e27; border-radius: 2px; }
+        .form-card { background: #ffffff; border: 1px solid #e9ecef; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 20px; }
+        .form-title { font-size: 16px; font-weight: bold; margin-bottom: 16px; color: #111111; display: flex; align-items: center; gap: 8px; border-left: 4px solid #ff1e27; padding-left: 10px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #444444; }
+        .form-control { width: 100%; padding: 12px 14px; border: 1px solid #cccccc; border-radius: 8px; font-size: 14px; outline: none; }
+        .form-control:focus { border-color: #ff1e27; }
+        .btn-main { width: 100%; padding: 14px; background: #2d3135; color: #ffffff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+        .btn-secondary { background: #ff1e27; }
+        .tab-group { display: flex; background: #eef2f5; border-radius: 8px; padding: 4px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px 0; text-align: center; font-size: 14px; font-weight: bold; background: none; border: none; cursor: pointer; border-radius: 6px; color: #666; }
+        .tab-btn.active { background: #ff1e27; color: #fff; }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="page-header">
+        <div class="page-title"><span class="bar"></span><span id="header-title-text">MD오피스</span></div>
+        <a href="index.html" style="text-decoration: none; color: #ff1e27; font-weight: bold;">◀ 메인 홈</a>
+    </div>
+
+    <!-- 상단 탭 그룹 (MD 로그인 / 신규 MD 신청) -->
+    <div class="tab-group">
+        <button class="tab-btn active" id="tab-md-login" onclick="switchMdTab('login')">MD 로그인</button>
+        <button class="tab-btn" id="tab-md-reg" onclick="switchMdTab('reg')">신규 MD 신청</button>
+    </div>
+
+    <!-- MD 로그인 폼 -->
+    <div id="md-login-sec" class="form-card">
+        <div class="form-title">🔐 MD 로그인</div>
+        <form onsubmit="event.preventDefault(); alert('MD 시스템에 로그인되었습니다.'); location.href='index.html';">
+            <div class="form-group">
+                <label>MD 아이디</label>
+                <input type="text" class="form-control" placeholder="MD 아이디 입력" required>
+            </div>
+            <div class="form-group">
+                <label>비밀번호</label>
+                <input type="password" class="form-control" placeholder="비밀번호 입력" required>
+            </div>
+            <button type="submit" class="btn-main">MD 로그인</button>
+        </form>
+    </div>
+
+    <!-- 신규 MD 신청 폼 -->
+    <div id="md-reg-sec" class="form-card" style="display: none;">
+        <div class="form-title">📝 신규 MD 신청하기</div>
+        <p style="font-size: 12px; color: #666; margin-bottom: 14px;">* 지역별 영업 쿼터제 운영 (인구 5만명당 MD 10명 제한)</p>
+        <form onsubmit="event.preventDefault(); alert('MD 신청이 완료되었습니다!'); location.href='index.html';">
+            <div class="form-group">
+                <label>희망 아이디</label>
+                <input type="text" class="form-control" placeholder="사용할 MD 아이디" required>
+            </div>
+            <div class="form-group">
+                <label>비밀번호</label>
+                <input type="password" class="form-control" placeholder="비밀번호 입력" required>
+            </div>
+            <div class="form-group">
+                <label>비밀번호 확인</label>
+                <input type="password" class="form-control" placeholder="비밀번호 재입력" required>
+            </div>
+            <div class="form-group">
+                <label>성명 (이름)</label>
+                <input type="text" class="form-control" placeholder="신청자 실명 입력" required>
+            </div>
+            <div class="form-group">
+                <label>휴대폰 번호</label>
+                <input type="tel" class="form-control" placeholder="010-0000-0000" required>
+            </div>
+            <div class="form-group">
+                <label>추천코드</label>
+                <input type="text" class="form-control" placeholder="추천인 코드 입력 (선택 또는 필수)">
+            </div>
+            <button type="submit" class="btn-main btn-secondary">MD 신청하기</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function switchMdTab(type) {
+        const loginSec = document.getElementById('md-login-sec');
+        const regSec = document.getElementById('md-reg-sec');
+        const btnL = document.getElementById('tab-md-login');
+        const btnR = document.getElementById('tab-md-reg');
+
+        if (type === 'login') {
+            loginSec.style.display = 'block';
+            regSec.style.display = 'none';
+            btnL.classList.add('active');
+            btnR.classList.remove('active');
+        } else {
+            loginSec.style.display = 'none';
+            regSec.style.display = 'block';
+            btnL.classList.remove('active');
+            btnR.classList.add('active');
+        }
+    }
+</script>
+</body>
+</html>
