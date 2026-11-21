@@ -21,13 +21,15 @@
         .sidebar-close-btn { font-size: 24px; color: #888888; cursor: pointer; }
         .sidebar-item { display: block; font-size: 16px; color: #dddddd; text-decoration: none; padding: 14px 10px; border-bottom: 1px solid #262626; }
         .sidebar-item:active { background-color: #2a2a2a; color: #ffffff; }
-        .bottom-sheet { position: fixed; bottom: -80vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: 65vh; background-color: #1a1a1a; border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 10002; transition: bottom 0.3s ease; padding: 24px; display: flex; flex-direction: column; color: #ffffff; }
-        .sheet-header { display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: bold; padding-bottom: 15px; border-bottom: 1px solid #333333; margin-bottom: 15px; }
+        .bottom-sheet { position: fixed; bottom: -80vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: 65vh; background-color: #1a1a1a; border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 10002; transition: bottom 0.3s ease; padding: 24px; display: flex; flex-direction: column; color: #ffffff; overflow: hidden; }
+        .sheet-header { display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: bold; padding-bottom: 15px; border-bottom: 1px solid #333333; margin-bottom: 15px; flex-shrink: 0; }
         .sheet-close-btn { font-size: 24px; color: #888888; cursor: pointer; }
-        .region-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; overflow-y: auto; padding-bottom: 20px; }
+        .region-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 20px; align-content: start; }
+        #major-grid { flex: 1; min-height: 0; overflow-y: auto; }
+        #sub-container { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 20px; }
         .region-btn { background-color: #2a2a2a; color: #ffffff; border: 1px solid #444444; padding: 12px 5px; border-radius: 8px; font-size: 14px; text-align: center; cursor: pointer; }
         .region-btn:active, .region-btn.active { background-color: #ff3b30; border-color: #ff3b30; }
-        .back-major-btn { background-color: #333; color: #ccc; border: 1px solid #555; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; margin-bottom: 12px; display: inline-block; }
+        .back-major-btn { background-color: #333; color: #ccc; border: 1px solid #555; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; margin-bottom: 12px; display: inline-block; align-self: flex-start; flex-shrink: 0; }
         .menu-open .global-overlay, .sheet-open .global-overlay { opacity: 1; visibility: visible; }
         .menu-open .sidebar-menu { left: 0; }
         .sheet-open .bottom-sheet { bottom: 0; }
@@ -70,7 +72,8 @@
 
         function selectMajor(majorName) {
             document.getElementById('major-grid').style.display = 'none';
-            document.getElementById('sub-container').style.display = 'block';
+            const subContainer = document.getElementById('sub-container');
+            subContainer.style.display = 'block';
             document.getElementById('sheet-title-text').innerText = majorName + " 시·군·구 선택";
             const subGrid = document.getElementById('sub-grid');
             subGrid.innerHTML = '';
@@ -82,6 +85,7 @@
                 btn.onclick = function() { selectSubRegion(majorName, sub); };
                 subGrid.appendChild(btn);
             });
+            subContainer.scrollTop = 0;
         }
 
         function backToMajor() {
@@ -183,6 +187,27 @@
                 if (el) { el.href = base_band; }
             }
         });
+
+        // ▼▼▼ 여기부터 붙여 넣으세요 ▼▼▼
+        function syncHeaderPadding() {
+            const header = document.querySelector('.header-container');
+            const container = document.querySelector('.mobile-container');
+            if (header && container) {
+                container.style.paddingTop = header.offsetHeight + 'px';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            syncHeaderPadding();
+            const headerImg = document.querySelector('.header-container img');
+            if (headerImg) {
+                headerImg.addEventListener('load', syncHeaderPadding);
+                if (headerImg.complete) syncHeaderPadding();
+            }
+        });
+        window.addEventListener('load', syncHeaderPadding);
+        window.addEventListener('resize', syncHeaderPadding);
+        // ▲▲▲ 여기까지 붙여 넣으세요 ▲▲▲
     </script>
 </body>
 </html>
